@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\PatientController;
 
 
 use Illuminate\Support\Facades\Route;
@@ -18,6 +20,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/appointments/availability',[AppointmentController::class, 'availability'])->name('appointments.availability');
     Route::resource('appointments', AppointmentController::class);
+    Route::resource('doctors', DoctorController::class);
+    Route::resource('patients', PatientController::class);
 });
 
 require __DIR__.'/auth.php';

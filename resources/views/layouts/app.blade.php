@@ -32,12 +32,12 @@
                     </a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a href="" class="nav-link text-white">
+                    <a href="{{ route('doctors.index') }}" class="nav-link text-white">
                         Manage Doctor
                     </a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a href="" class="nav-link text-white">
+                    <a href="{{ route('patients.index') }}" class="nav-link text-white">
                         Manage Patient
                     </a>
                 </li>
