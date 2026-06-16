@@ -1,0 +1,132 @@
+#appointmentsTable thead {
+    background: #ff9800;
+    color: white;
+}
+
+.btn-warning {
+    background: #ff9800;
+    border-color: #ff9800;
+}
+
+.page-item.active .page-link {
+    background: #ff9800;
+    border-color: #ff9800;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background: #ff9800 !important;
+    color: #fff !important;
+}
+
+table.dataTable tbody tr:hover {
+    background-color: #fff3e0;
+}
+
+
+.appointment-form-card .form-label{
+    margin-bottom: 8px;
+    font-weight:600;
+    color:#8b5e3c;
+}
+
+.appointment-form-card .form-control,
+.appointment-form-card .form-select{
+    height: 46px;
+    border:1px solid #e7c6aa;
+    background:#fffdfb;
+}
+
+.appointment-form-card .form-control:focus,
+.appointment-form-card .form-select:focus{
+    border-color:#d99a6c;
+    box-shadow:0 0 0 .2rem rgba(217,154,108,.15);
+}
+
+.appointment-save-btn{
+    background:#d88b52;
+    border:none;
+    color:white;
+    padding:10px 25px;
+    border-radius:6px;
+}
+
+.appointment-save-btn:hover{
+    background:#c7773d;
+    color:white;
+}
+#appointmentModal .modal-content{
+    background: #fff4eb;
+    border: 1px solid #f3d1b6;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+#appointmentModal .modal-header{
+    background: #fff3e0;
+    border-bottom: 1px solid #f3d1b6;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    padding: 20px 30px;
+}
+
+.appointment-form-card{
+    padding: 15px;
+}
+.appointment-form-card .row{
+    row-gap: 12px;
+}
+
+#appointmentModal .modal-body{
+    background: #fff4eb;
+    padding: 30px;
+}
+
+#appointmentModal .modal-footer{
+
+    background: #fff4eb;
+    border-top: 1px solid #f3d1b6;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+#appointmentModal .modal-title{
+    color: #8a5a2b;
+    font-weight: 600;
+}
+.appointment-edit-card {
+    background-color: #fff8f0;
+    border: 1px solid #ffd8a8;
+    box-shadow: 0 2px 10px rgba(255, 165, 0, 0.1);
+}
+
+.appointment-edit-card .card-header {
+    background-color: #ffe8cc;
+    border-bottom: 1px solid #ffd8a8;
+}
+
+.appointment-edit-card .card-header h4 {
+    color: #d97706;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.appointment-edit-card .form-label {
+    color: #92400e;
+    font-weight: 500;
+}
+
+.appointment-edit-card .form-control:focus,
+.appointment-edit-card .form-select:focus {
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 0.2rem rgba(245, 158, 11, 0.15);
+}
+
+.btn-primary {
+    background-color: #f59e0b;
+    border-color: #f59e0b;
+}
+
+.btn-primary:hover {
+    background-color: #d97706;
+    border-color: #d97706;
+}

@@ -20,7 +20,19 @@ class ProfileController extends Controller
             'user' => $request->user(),
         ]);
     }
+    public function index(Request $request)
+    {
+        $user = Auth::user();
 
+        if ($user->role === 'admin') {
+            return view('admin.dashboard');
+        }
+
+        if ($user->role === 'staff') {
+            return redirect()->route('staff.dashboard');
+        }
+
+    }
     /**
      * Update the user's profile information.
      */

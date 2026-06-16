@@ -1,36 +1,121 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="en">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Appoinment Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    @stack('styles')
+</head>
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            @include('layouts.navigation')
+<body>
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+    <div class="d-flex">
+
+        <!-- Sidebar -->
+        <div class="bg-dark text-white p-3" style="width:250px; min-height:100vh;">
+
+            @if(auth()->user()->role === 'admin')
+            <h4 class="mb-4" style="color:#C19A6B;">Admin Panel</h4>
+
+            <ul class="nav flex-column">
+
+                <li class="nav-item mb-2">
+                    <a href="{{ route('dashboard') }}" class="nav-link text-white">
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a href="" class="nav-link text-white">
+                        Manage Doctor
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a href="" class="nav-link text-white">
+                        Manage Patient
+                    </a>
+                </li>
+                    <li class="nav-item mb-2">
+                        <a href="{{ route('appointments.index') }}" class="nav-link text-white">
+                        Appointments
+                        </a>
+                    </li>
+
+                @endif
+
+                @if(auth()->user()->role === 'staff')
+                <h3 class="mb-4" style="color:#C19A6B;">Staff Panel</h3>
+
+                <ul class="nav flex-column">
+
+                    <li class="nav-item mb-2">
+                        <a href="{{ route('staff.dashboard') }}" class="nav-link text-white">
+                            Dashboard
+                        </a>
+                    </li>
+
+                    @endif
+
+                </ul>
+        </div>
+
+        <div class="w-100">
+            <nav class="navbar navbar-light bg-light px-4 d-flex justify-content-end">
+
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle"
+                        type="button"
+                        data-bs-toggle="dropdown">
+                        {{ Auth::user()->name }}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item"
+                                href="{{ route('profile.edit') }}">
+                                Profile
+                            </a>
+                        </li>
+
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="dropdown-item">
+                                    Logout
+                                </button>
+                            </form>
+
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </nav>
 
             <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+            <div class="p-4">
+
+                @yield('content')
+
+            </div>
+
         </div>
-    </body>
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+    @stack('scripts')
+
+</body>
+
 </html>
