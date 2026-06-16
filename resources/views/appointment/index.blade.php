@@ -41,7 +41,7 @@
 
                 <td>{{ $appointment->doctor->department->name }}</td>
 
-                <td>{{ $appointment->appointment_time }}</td>
+                <td>{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('d-m-Y g:i A') }}</td>
 
                 <td>{{ $appointment->duration }}</td>
 

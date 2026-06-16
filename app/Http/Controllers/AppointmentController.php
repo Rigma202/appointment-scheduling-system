@@ -34,6 +34,12 @@ class AppointmentController extends Controller
             'departments' => $this->appointmentService->getDepartments()
         ]);
     }
+    public function availability()
+    {
+        return view('doctors.availability', [
+            'doctors' => $this->appointmentService->getDoctors(),
+        ]);
+    }
 
     public function store(StoreAppointmentRequest $request)
     {

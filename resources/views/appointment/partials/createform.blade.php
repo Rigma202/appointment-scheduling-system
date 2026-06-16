@@ -60,12 +60,34 @@
             <div class="col-md-6">
                 <label class="form-label">Appointment Time</label>
 
-                <input id="appointment_time" type="time"
+                <select
                     name="appointment_time"
                     id="appointment_time"
-                    class="form-control"
-                    value="{{ old('appointment_time', isset($appointment) ? \Carbon\Carbon::parse($appointment->appointment_time)->format('H:i') : '') }}">
+                    class="form-select">
 
+                    <option value="">Select Time</option>
+
+                    @php
+                        $start = \Carbon\Carbon::createFromTime(9,15);
+                        $end = \Carbon\Carbon::createFromTime(16,0);
+                    @endphp
+
+                    @while($start <= $end)
+
+                        <option value="{{ $start->format('H:i') }}"
+                            @selected(old('appointment_time') == $start->format('H:i'))>
+
+                            {{ $start->format('h:i A') }}
+
+                        </option>
+
+                        @php
+                            $start->addMinutes(15);
+                        @endphp
+
+                    @endwhile
+
+                </select>
                 <span class="text-danger error-appointment_time"></span>
             </div>
 
