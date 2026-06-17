@@ -19,6 +19,11 @@ class PatientController extends Controller
     public function store(PatientRequest $request)
     {
         $this->service->store($request->validated());
+
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true, 'message' => 'Patient created successfully']);
+        }
+
         return redirect()->back();
     }
 
@@ -30,12 +35,22 @@ class PatientController extends Controller
     public function update(PatientRequest $request, Patient $patient)
     {
         $this->service->update($patient, $request->validated());
+
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true, 'message' => 'Patient updated successfully']);
+        }
+
         return redirect()->route('patients.index');
     }
 
     public function destroy(Patient $patient)
     {
         $this->service->delete($patient);
+
+        if (request()->expectsJson()) {
+            return response()->json(['success' => true, 'message' => 'Patient deleted successfully']);
+        }
+
         return redirect()->back();
     }
 }
