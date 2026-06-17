@@ -83,7 +83,7 @@ export default function AvailabilityChecker({ doctors = [] }) {
                         )}
                         {!loading &&
                             slots?.map((slot) => (
-                                <button key={slot} className="btn btn-outline-success btn-sm">
+                                <button key={slot} className="btn btn-success btn-sm">
                                     {slot}
                                 </button>
                             ))}

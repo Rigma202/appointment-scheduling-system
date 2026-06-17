@@ -24,12 +24,33 @@ class AppointmentService
      */
     public function getAll()
     {
-        return Appointment::with([
-            'doctor.department',
-            'patient'
-        ])
-        ->orderByDesc('appointment_time')
-        ->get();
+        return $this->filter([]);
+    }
+
+    /**
+     * Filter appointments by doctor, department, status and/or date (all optional),
+     * applied at the SQL level. Most recent first.
+     */
+    public function filter(array $filters)
+    {
+        return Appointment::query()
+            ->with(['doctor.department', 'patient'])
+            ->when($filters['doctor_id'] ?? null, function ($query, $doctorId) {
+                $query->where('doctor_id', $doctorId);
+            })
+            ->when($filters['department_id'] ?? null, function ($query, $departmentId) {
+                $query->whereHas('doctor', function ($doctor) use ($departmentId) {
+                    $doctor->where('department_id', $departmentId);
+                });
+            })
+            ->when($filters['status'] ?? null, function ($query, $status) {
+                $query->where('status', $status);
+            })
+            ->when($filters['date'] ?? null, function ($query, $date) {
+                $query->whereDate('appointment_time', $date);
+            })
+            ->orderByDesc('appointment_time')
+            ->get();
     }
 
     /**

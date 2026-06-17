@@ -42,6 +42,31 @@ class AppointmentController extends Controller
         ]);
     }
 
+    public function filter(Request $request)
+    {
+        $validated = $request->validate([
+            'doctor_id' => 'nullable|exists:doctors,id',
+            'department_id' => 'nullable|exists:departments,id',
+            'status' => 'nullable|in:scheduled,completed,cancelled',
+            'date' => 'nullable|date',
+        ]);
+
+        $appointments = $this->appointmentService->filter($validated);
+
+        return response()->json([
+            'success' => true,
+            'data' => $appointments->map(fn ($a) => [
+                'id' => $a->id,
+                'doctor_name' => $a->doctor->name ?? '',
+                'patient_name' => $a->patient->name ?? '',
+                'department' => $a->doctor->department->name ?? '',
+                'datetime' => $a->appointment_time->format('d-m-Y g:i A'),
+                'duration' => $a->duration,
+                'status' => $a->status,
+            ])->values(),
+        ]);
+    }
+
     public function search(Request $request)
     {
         $validated = $request->validate([

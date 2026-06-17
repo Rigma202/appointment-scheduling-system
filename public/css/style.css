@@ -112,16 +112,18 @@
     color: #08406f;
 }
 
-/* Bordered action buttons inside the appointments table */
+/* Bordered action buttons inside the appointments table and doctor cards */
 .appt-table .btn-view {
     border: 1px solid #5a9bd4;
 }
 
-.appt-table .btn-edit {
+.appt-table .btn-edit,
+.card-doctor .btn-edit {
     border: 1px solid #2e7d4f;
 }
 
-.appt-table .btn-delete {
+.appt-table .btn-delete,
+.card-doctor .btn-delete {
     border: 1px solid #c0504d;
 }
 
@@ -219,7 +221,7 @@ body {
 }
 
 .sidebar-link.active {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
+    background: linear-gradient(135deg, #ecc685, #d97706);
     color: #fff;
     box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
 }
@@ -438,11 +440,15 @@ table.dataTable tbody tr:hover {
 }
 
 .btn-primary {
-    background-color: #f59e0b;
-    border-color: #f59e0b;
+    background-color: #f8b541;
+    border-color: #edce9a;
+    color: #5d4037 !important;
 }
 
-.btn-primary:hover {
-    background-color: #d97706;
-    border-color: #d97706;
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: #faa23d;
+    border-color: #ec8d20;
+    color: #5d4037 !important;
 }

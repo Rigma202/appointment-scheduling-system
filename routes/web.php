@@ -20,6 +20,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/appointments/availability',[AppointmentController::class, 'availability'])->name('appointments.availability');
     Route::get('/appointments-search', [AppointmentController::class, 'search'])->name('appointments.search');
+    Route::get('/appointments-filter', [AppointmentController::class, 'filter'])->name('appointments.filter');
     Route::resource('appointments', AppointmentController::class);
     Route::resource('doctors', DoctorController::class);
     Route::resource('patients', PatientController::class);

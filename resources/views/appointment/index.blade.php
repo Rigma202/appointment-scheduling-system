@@ -15,9 +15,11 @@
 
     $reactProps = [
         'appointments' => $appointmentRows,
-        'doctors' => collect($doctors)->map(fn ($d) => ['id' => $d->id, 'name' => $d->name])->values(),
+        'doctors' => collect($doctors)->map(fn ($d) => ['id' => $d->id, 'name' => $d->name, 'department' => $d->department->name ?? ''])->values(),
         'patients' => collect($patients)->map(fn ($p) => ['id' => $p->id, 'name' => $p->name])->values(),
+        'departments' => collect($departments)->map(fn ($d) => ['id' => $d->id, 'name' => $d->name])->values(),
         'storeAction' => route('appointments.store'),
+        'filterUrl' => route('appointments.filter'),
         'baseUrl' => url('appointments'),
     ];
 @endphp

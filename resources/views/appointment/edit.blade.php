@@ -7,7 +7,7 @@
         'mode' => 'edit',
         'action' => route('appointments.update', $appointment->id),
         'redirectTo' => route('appointments.index'),
-        'doctors' => collect($doctors)->map(fn ($d) => ['id' => $d->id, 'name' => $d->name])->values(),
+        'doctors' => collect($doctors)->map(fn ($d) => ['id' => $d->id, 'name' => $d->name, 'department' => $d->department->name ?? ''])->values(),
         'patients' => collect($patients)->map(fn ($p) => ['id' => $p->id, 'name' => $p->name])->values(),
         'appointment' => [
             'doctor_id' => $appointment->doctor_id,
@@ -23,7 +23,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h4 class="mb-0">Edit Appointment</h4>
-            <a href="{{ route('appointments.index') }}" class="btn btn-secondary btn-sm">Back</a>
+            <a href="{{ route('appointments.index') }}" class="btn-close" aria-label="Close"></a>
         </div>
         <div class="card-body">
             <div data-react="appointment-form" data-props="{{ json_encode($reactProps) }}"></div>

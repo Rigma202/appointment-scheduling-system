@@ -1,9 +1,18 @@
 import { useState } from 'react';
 import api, { parseError } from '../api';
 import DataTable from '../ui/DataTable';
+import Select from '../ui/Select';
 import Modal from '../ui/Modal';
 import AppointmentForm from './AppointmentForm';
 import { confirm, toast } from '../ui/notify';
+
+const EMPTY_FILTERS = { doctor_id: '', department_id: '', status: '', date: '' };
+
+const STATUS_OPTIONS = [
+    { value: 'scheduled', label: 'Scheduled' },
+    { value: 'completed', label: 'Completed' },
+    { value: 'cancelled', label: 'Cancelled' },
+];
 
 // Coloured text (no background) per status.
 const STATUS_TEXT = {
@@ -17,11 +26,40 @@ export default function AppointmentsApp({
     appointments: initial = [],
     doctors = [],
     patients = [],
+    departments = [],
     storeAction,
+    filterUrl,
     baseUrl = '/appointments',
 }) {
     const [rows, setRows] = useState(initial);
     const [showCreate, setShowCreate] = useState(false);
+    const [filters, setFilters] = useState(EMPTY_FILTERS);
+    const [filtering, setFiltering] = useState(false);
+
+    const setFilter = (key, value) => setFilters((f) => ({ ...f, [key]: value }));
+
+    const applyFilters = async () => {
+        if (!filterUrl) return;
+        setFiltering(true);
+        try {
+            const params = Object.fromEntries(
+                Object.entries(filters).filter(([, v]) => v !== '' && v != null)
+            );
+            const { data } = await api.get(filterUrl, { params });
+            setRows(data.data ?? []);
+        } catch (error) {
+            toast('error', parseError(error).message || 'Could not filter appointments.', 'Error');
+        } finally {
+            setFiltering(false);
+        }
+    };
+
+    const resetFilters = () => {
+        setFilters(EMPTY_FILTERS);
+        setRows(initial);
+    };
+
+    const hasActiveFilter = Object.values(filters).some((v) => v !== '' && v != null);
 
     const onDelete = async (row) => {
         const message =
@@ -92,6 +130,64 @@ export default function AppointmentsApp({
                 <button className="btn btn-primary" onClick={() => setShowCreate(true)}>
                     + Create Appointment
                 </button>
+            </div>
+
+            <div className="card border-0 shadow-sm mb-3">
+                <div className="card-body">
+                    <div className="row g-3 align-items-end">
+                        <div className="col-md-3">
+                            <label className="form-label small text-muted">Doctor</label>
+                            <Select
+                                value={filters.doctor_id}
+                                onChange={(v) => setFilter('doctor_id', v)}
+                                options={doctors.map((d) => ({
+                                    value: d.id,
+                                    label: d.department ? `${d.name} (${d.department})` : d.name,
+                                }))}
+                                placeholder="All Doctors"
+                            />
+                        </div>
+                        <div className="col-md-3">
+                            <label className="form-label small text-muted">Department</label>
+                            <Select
+                                value={filters.department_id}
+                                onChange={(v) => setFilter('department_id', v)}
+                                options={departments.map((d) => ({ value: d.id, label: d.name }))}
+                                placeholder="All Departments"
+                            />
+                        </div>
+                        <div className="col-md-2">
+                            <label className="form-label small text-muted">Status</label>
+                            <Select
+                                value={filters.status}
+                                onChange={(v) => setFilter('status', v)}
+                                options={STATUS_OPTIONS}
+                                placeholder="All Status"
+                            />
+                        </div>
+                        <div className="col-md-2">
+                            <label className="form-label small text-muted">Date</label>
+                            <input
+                                type="date"
+                                className="form-control"
+                                value={filters.date}
+                                onChange={(e) => setFilter('date', e.target.value)}
+                            />
+                        </div>
+                        <div className="col-md-2 d-flex gap-2">
+                            <button className="btn btn-primary flex-grow-1" onClick={applyFilters} disabled={filtering}>
+                                {filtering ? '...' : 'Filter'}
+                            </button>
+                            <button
+                                className="btn btn-outline-secondary"
+                                onClick={resetFilters}
+                                disabled={!hasActiveFilter && rows === initial}
+                            >
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div className="card border-0 shadow-sm appt-table">

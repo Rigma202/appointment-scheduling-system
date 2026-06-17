@@ -92,7 +92,10 @@ export default function AppointmentForm({
                         <Select
                             value={form.doctor_id}
                             onChange={(v) => set('doctor_id', v)}
-                            options={doctors.map((d) => ({ value: d.id, label: d.name }))}
+                            options={doctors.map((d) => ({
+                                value: d.id,
+                                label: d.department ? `${d.name} (${d.department})` : d.name,
+                            }))}
                             placeholder="Select Doctor"
                             invalid={!!err('doctor_id')}
                         />
