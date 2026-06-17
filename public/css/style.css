@@ -45,28 +45,84 @@
     background: transparent;
 }
 
+.entity-card .card-body {
+    color: #1f2937;
+}
+
+.entity-card h6 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.entity-card .small,
+.entity-card small {
+    font-size: 0.95rem !important;
+}
+
+.entity-card .text-muted {
+    color: #374151 !important;
+}
+
 .card-doctor {
-    background: linear-gradient(180deg, #f5ece0 0%, #ffffff 55%);
-    border-top: 4px solid #b08968;
+    background: #f0dd9e;
 }
 
 .card-patient {
-    background: linear-gradient(180deg, #e6f2fb 0%, #ffffff 55%);
-    border-top: 4px solid #3b82f6;
+    background: #ebae85;
 }
 
-/* ===== Edit action button ===== */
+/* ===== Card action buttons ===== */
 .btn-edit {
-    background: #6366f1;
-    border-color: #6366f1;
-    color: #fff;
+    background: #bff0c8;
+    border-color: #bff0c8;
+    color: #14622b;
 }
 
 .btn-edit:hover,
 .btn-edit:focus {
-    background: #4f46e5;
-    border-color: #4f46e5;
-    color: #fff;
+    background: #a6e6b3;
+    border-color: #a6e6b3;
+    color: #0f4d22;
+}
+
+.btn-delete {
+    background: #fbd0d0;
+    border-color: #fbd0d0;
+    color: #9b2226;
+}
+
+.btn-delete:hover,
+.btn-delete:focus {
+    background: #f7baba;
+    border-color: #f7baba;
+    color: #7a1619;
+}
+
+.btn-view {
+    background: #cfe8fb;
+    border-color: #cfe8fb;
+    color: #0b5394;
+}
+
+.btn-view:hover,
+.btn-view:focus {
+    background: #b6dcf7;
+    border-color: #b6dcf7;
+    color: #08406f;
+}
+
+/* Bordered action buttons inside the appointments table */
+.appt-table .btn-view {
+    border: 1px solid #5a9bd4;
+}
+
+.appt-table .btn-edit {
+    border: 1px solid #2e7d4f;
+}
+
+.appt-table .btn-delete {
+    border: 1px solid #c0504d;
 }
 
 /* ===== App layout: sidebar + topbar ===== */

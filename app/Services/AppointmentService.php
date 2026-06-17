@@ -19,6 +19,35 @@ class AppointmentService
         ->paginate(10);
     }
 
+    /**
+     * All appointments for the listing table (paginated client-side), most recent first.
+     */
+    public function getAll()
+    {
+        return Appointment::with([
+            'doctor.department',
+            'patient'
+        ])
+        ->orderByDesc('appointment_time')
+        ->get();
+    }
+
+    /**
+     * The nearest upcoming (future, non-cancelled) appointments, soonest first.
+     */
+    public function getUpcoming(int $limit = 5)
+    {
+        return Appointment::with([
+            'doctor.department',
+            'patient'
+        ])
+        ->where('appointment_time', '>=', now())
+        ->where('status', '!=', 'cancelled')
+        ->orderBy('appointment_time')
+        ->limit($limit)
+        ->get();
+    }
+
     public function create(array $data): array
     {
         $appointmentDateTime = Carbon::parse(
@@ -53,22 +82,13 @@ class AppointmentService
 
     private function checkConflicts(int $doctorId,int $patientId, Carbon $startTime, int $duration,?int $ignoreAppointmentId = null): array
     {
-
         $endTime = $startTime->copy()->addMinutes($duration);
 
-        $doctorConflict = Appointment::where('doctor_id', $doctorId)
-            ->where('status', '!=', 'cancelled')
-            ->when($ignoreAppointmentId, function ($query) use ($ignoreAppointmentId) {
-                $query->where('id', '!=', $ignoreAppointmentId);
-            })
-            ->where('appointment_time', '<', $endTime)
-            ->whereRaw(
-                "DATE_ADD(appointment_time, INTERVAL duration MINUTE) > ?",
-                [$startTime]
-            )
-            ->get();
+        $doctorConflict = $this->overlappingAppointments($startTime, $endTime, $ignoreAppointmentId)
+            ->where('doctor_id', $doctorId)
+            ->get(['appointment_time', 'duration']);
 
-        if ($doctorConflict->count()) {
+        if ($doctorConflict->isNotEmpty()) {
 
             $bookings = $doctorConflict->map(function ($appointment) {
 
@@ -87,19 +107,11 @@ class AppointmentService
             ];
         }
 
-        $patientConflict = Appointment::where('patient_id', $patientId)
-            ->where('status', '!=', 'cancelled')
-            ->when($ignoreAppointmentId, function ($query) use ($ignoreAppointmentId) {
-                $query->where('id', '!=', $ignoreAppointmentId);
-            })
-            ->where('appointment_time', '<', $endTime)
-            ->whereRaw(
-                "DATE_ADD(appointment_time, INTERVAL duration MINUTE) > ?",
-                [$startTime]
-            )
-            ->get();
+        $patientHasConflict = $this->overlappingAppointments($startTime, $endTime, $ignoreAppointmentId)
+            ->where('patient_id', $patientId)
+            ->exists();
 
-        if ($patientConflict->count()) {
+        if ($patientHasConflict) {
 
             return [
                 'success' => false,
@@ -111,6 +123,20 @@ class AppointmentService
         return [
             'success' => true,
         ];
+    }
+
+    /**
+     * Base query for non-cancelled appointments that overlap the given window:
+     * existing.start < new.end AND existing.end > new.start.
+     */
+    private function overlappingAppointments(Carbon $startTime, Carbon $endTime, ?int $ignoreAppointmentId)
+    {
+        return Appointment::where('status', '!=', 'cancelled')
+            ->where('appointment_time', '<', $endTime)
+            ->whereRaw('DATE_ADD(appointment_time, INTERVAL duration MINUTE) > ?', [$startTime])
+            ->when($ignoreAppointmentId, function ($query) use ($ignoreAppointmentId) {
+                $query->where('id', '!=', $ignoreAppointmentId);
+            });
     }
 
     public function find(int $id)
@@ -158,9 +184,56 @@ class AppointmentService
         return Appointment::findOrFail($id)->delete();
     }
 
+    /**
+     * Aggregate counts for the admin dashboard.
+     */
+    public function dashboardStats(): array
+    {
+        $weekCount = Appointment::whereBetween('appointment_time', [
+            now()->startOfWeek(),
+            now()->endOfWeek(),
+        ])->count();
+
+        $scheduledCount = Appointment::where('status', 'scheduled')->count();
+        $cancelledCount = Appointment::where('status', 'cancelled')->count();
+
+        // Busiest / quietest doctor among those who actually have appointments.
+        $doctors = Doctor::withCount('appointments')
+            ->having('appointments_count', '>', 0)
+            ->get();
+
+        $most = $doctors->sortByDesc('appointments_count')->first();
+        $least = $doctors->sortBy('appointments_count')->first();
+
+        $summary = fn ($doctor) => $doctor
+            ? ['name' => $doctor->name, 'count' => $doctor->appointments_count]
+            : null;
+
+        return [
+            'week' => $weekCount,
+            'scheduled' => $scheduledCount,
+            'cancelled' => $cancelledCount,
+            'most' => $summary($most),
+            'least' => $summary($least),
+        ];
+    }
+
+    /**
+     * All appointments for a doctor on a given date, soonest first.
+     */
+    public function appointmentsForDoctorOnDate(int $doctorId, string $date)
+    {
+        return Appointment::with('patient')
+            ->where('doctor_id', $doctorId)
+            ->whereDate('appointment_time', $date)
+            ->orderBy('appointment_time')
+            ->get();
+    }
+
     public function getDoctors()
     {
-        return Doctor::orderBy('name')->get();
+        // Eager-load department: the availability view reads $doctor->department->name.
+        return Doctor::with('department')->orderBy('name')->get();
     }
 
     public function getPatients()

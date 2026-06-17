@@ -60,7 +60,7 @@ export default function DoctorsApp({
                 <button className="btn btn-edit btn-sm" onClick={() => setEditDoctor(d)}>
                     Edit
                 </button>
-                <button className="btn btn-outline-danger btn-sm" onClick={() => onDelete(d)}>
+                <button className="btn btn-delete btn-sm" onClick={() => onDelete(d)}>
                     Delete
                 </button>
             </div>

@@ -1,5 +1,6 @@
-// Circular initials avatar with a deterministic colour derived from the name.
-const COLORS = ['#6366f1', '#0ea5e9', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6'];
+// Circular initials avatar. A single brand colour is used for everyone;
+// pass `color` to override for a specific avatar.
+const DEFAULT_COLOR = '#5d4037';
 
 function initials(name = '') {
     const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -8,10 +9,8 @@ function initials(name = '') {
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
-export default function Avatar({ name, size = 48 }) {
-    let hash = 0;
-    for (let i = 0; i < (name || '').length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    const bg = COLORS[Math.abs(hash) % COLORS.length];
+export default function Avatar({ name, size = 48, color }) {
+    const bg = color || DEFAULT_COLOR;
 
     return (
         <div

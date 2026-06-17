@@ -1,6 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import { ensureNotifyHost } from './ui/notify';
 
+import Dashboard from './components/Dashboard';
 import AppointmentsApp from './components/AppointmentsApp';
 import AppointmentForm from './components/AppointmentForm';
 import AvailabilityChecker from './components/AvailabilityChecker';
@@ -11,6 +12,7 @@ import PatientForm from './components/PatientForm';
 
 
 const registry = {
+    dashboard: Dashboard,
     appointments: AppointmentsApp,
     'appointment-form': AppointmentForm,
     availability: AvailabilityChecker,

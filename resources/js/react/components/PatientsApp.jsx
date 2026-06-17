@@ -57,7 +57,7 @@ export default function PatientsApp({
                 <button className="btn btn-edit btn-sm" onClick={() => setEditPatient(p)}>
                     Edit
                 </button>
-                <button className="btn btn-outline-danger btn-sm" onClick={() => onDelete(p)}>
+                <button className="btn btn-delete btn-sm" onClick={() => onDelete(p)}>
                     Delete
                 </button>
             </div>

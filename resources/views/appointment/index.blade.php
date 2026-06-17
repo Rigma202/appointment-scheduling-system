@@ -3,7 +3,7 @@
 @section('content')
 
 @php
-    $appointmentRows = collect($appointments->items())->map(fn ($a) => [
+    $appointmentRows = collect($appointments)->map(fn ($a) => [
         'id' => $a->id,
         'doctor_name' => $a->doctor->name ?? '',
         'patient_name' => $a->patient->name ?? '',

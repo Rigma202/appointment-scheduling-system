@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import api, { parseError } from '../api';
-import CardGrid from '../ui/CardGrid';
+import DataTable from '../ui/DataTable';
 import Modal from '../ui/Modal';
 import AppointmentForm from './AppointmentForm';
 import { confirm, toast } from '../ui/notify';
 
-const STATUS_STYLE = {
-    scheduled: 'text-bg-primary',
-    completed: 'text-bg-success',
-    cancelled: 'text-bg-danger',
-    pending: 'text-bg-warning',
+// Coloured text (no background) per status.
+const STATUS_TEXT = {
+    scheduled: 'text-primary',
+    completed: 'text-success',
+    cancelled: 'text-danger',
+    pending: 'text-warning',
 };
 
 export default function AppointmentsApp({
@@ -44,48 +45,45 @@ export default function AppointmentsApp({
         }
     };
 
-    const renderCard = (r) => {
-        const status = (r.status || '').toLowerCase();
-        return (
-            <div className="card h-100 shadow-sm border-0">
-                <div className="card-header bg-white d-flex justify-content-between align-items-center border-0">
-                    <span className="text-muted small">#{r.id}</span>
-                    <span className={`badge rounded-pill ${STATUS_STYLE[status] || 'text-bg-secondary'}`}>
+    const columns = [
+        { key: 'id', label: '#', width: 60 },
+        { key: 'doctor_name', label: 'Doctor' },
+        { key: 'patient_name', label: 'Patient' },
+        { key: 'department', label: 'Department' },
+        { key: 'datetime', label: 'Date & Time' },
+        { key: 'duration', label: 'Duration', render: (r) => `${r.duration} min` },
+        {
+            key: 'status',
+            label: 'Status',
+            render: (r) => {
+                const status = (r.status || '').toLowerCase();
+                return (
+                    <span className={`fw-semibold ${STATUS_TEXT[status] || 'text-secondary'}`}>
                         {r.status ? r.status[0].toUpperCase() + r.status.slice(1) : '—'}
                     </span>
-                </div>
-                <div className="card-body pt-0">
-                    <div className="d-flex align-items-center mb-2">
-                        <span className="me-2 fs-5">🗓️</span>
-                        <strong>{r.datetime}</strong>
-                    </div>
-                    <div className="row g-2 small">
-                        <div className="col-12">
-                            <span className="text-muted">Doctor:</span> {r.doctor_name}
-                            {r.department && <span className="text-muted"> · {r.department}</span>}
-                        </div>
-                        <div className="col-12">
-                            <span className="text-muted">Patient:</span> {r.patient_name}
-                        </div>
-                        <div className="col-12">
-                            <span className="text-muted">Duration:</span> {r.duration} min
-                        </div>
-                    </div>
-                </div>
-                <div className="card-footer bg-white border-0 d-flex justify-content-end gap-2 pt-0">
-                    <a href={`${baseUrl}/${r.id}`} className="btn btn-outline-info btn-sm">
+                );
+            },
+        },
+        {
+            key: 'action',
+            label: 'Action',
+            sortable: false,
+            width: 200,
+            render: (r) => (
+                <div className="d-flex gap-1">
+                    <a href={`${baseUrl}/${r.id}`} className="btn btn-view btn-sm">
                         View
                     </a>
-                    <a href={`${baseUrl}/${r.id}/edit`} className="btn btn-outline-warning btn-sm">
+                    <a href={`${baseUrl}/${r.id}/edit`} className="btn btn-edit btn-sm">
                         Edit
                     </a>
-                    <button className="btn btn-outline-danger btn-sm" onClick={() => onDelete(r)}>
+                    <button className="btn btn-delete btn-sm" onClick={() => onDelete(r)}>
                         Delete
                     </button>
                 </div>
-            </div>
-        );
-    };
+            ),
+        },
+    ];
 
     return (
         <div className="container">
@@ -96,14 +94,16 @@ export default function AppointmentsApp({
                 </button>
             </div>
 
-            <CardGrid
-                items={rows}
-                searchText={(r) =>
-                    `${r.id} ${r.doctor_name} ${r.patient_name} ${r.department} ${r.datetime} ${r.status}`
-                }
-                renderCard={renderCard}
-                emptyText="No appointments found"
-            />
+            <div className="card border-0 shadow-sm appt-table">
+                <div className="card-body">
+                    <DataTable
+                        columns={columns}
+                        rows={rows}
+                        pageSize={7}
+                        emptyText="No appointments found"
+                    />
+                </div>
+            </div>
 
             <Modal open={showCreate} title="Create Appointment" onClose={() => setShowCreate(false)}>
                 <AppointmentForm

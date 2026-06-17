@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\AppointmentService;
 use App\Http\Requests\StoreAppointmentRequest;
 use App\Http\Requests\UpdateAppointmentRequest;
+use Illuminate\Http\Request;
 
 
 class AppointmentController extends Controller
@@ -19,7 +20,7 @@ class AppointmentController extends Controller
     public function index()
     {
         return view('appointment.index', [
-            'appointments' => $this->appointmentService->getPaginated(),
+            'appointments' => $this->appointmentService->getAll(),
             'doctors' => $this->appointmentService->getDoctors(),
             'patients' => $this->appointmentService->getPatients(),
             'departments' => $this->appointmentService->getDepartments(),
@@ -38,6 +39,28 @@ class AppointmentController extends Controller
     {
         return view('doctors.availability', [
             'doctors' => $this->appointmentService->getDoctors(),
+        ]);
+    }
+
+    public function search(Request $request)
+    {
+        $validated = $request->validate([
+            'doctor_id' => 'required|exists:doctors,id',
+            'date' => 'required|date',
+        ]);
+
+        $appointments = $this->appointmentService
+            ->appointmentsForDoctorOnDate($validated['doctor_id'], $validated['date']);
+
+        return response()->json([
+            'success' => true,
+            'data' => $appointments->map(fn ($a) => [
+                'id' => $a->id,
+                'time' => $a->appointment_time->format('h:i A'),
+                'patient' => $a->patient->name ?? '',
+                'duration' => $a->duration,
+                'status' => $a->status,
+            ])->values(),
         ]);
     }
 

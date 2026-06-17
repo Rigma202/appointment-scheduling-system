@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Services\AppointmentService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,12 +21,15 @@ class ProfileController extends Controller
             'user' => $request->user(),
         ]);
     }
-    public function index(Request $request)
+    public function index(Request $request, AppointmentService $appointmentService)
     {
         $user = Auth::user();
 
         if ($user->role === 'admin') {
-            return view('admin.dashboard');
+            return view('admin.dashboard', [
+                'stats' => $appointmentService->dashboardStats(),
+                'doctors' => $appointmentService->getDoctors(),
+            ]);
         }
 
         if ($user->role === 'staff') {
