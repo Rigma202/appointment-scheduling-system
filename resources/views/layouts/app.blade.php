@@ -48,7 +48,7 @@
                     </li>
                     <li class="nav-item mb-2">
                         <a href="{{ route('appointments.availability') }}" class="nav-link text-white">
-                            CheckAvailability
+                            Check Availability
                         </a>
                     </li>
 

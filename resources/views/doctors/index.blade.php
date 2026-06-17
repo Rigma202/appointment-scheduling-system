@@ -14,6 +14,7 @@
     <table class="table table-bordered" id="doctorsTable">
         <thead>
             <tr>
+                <th>Sl no.</th>
                 <th>Name</th>
                 <th>Department</th>
                 <th>Phone</th>
@@ -25,6 +26,7 @@
         <tbody>
             @foreach($doctors as $doctor)
             <tr>
+                <td>{{ $doctor->id}}</td>
                 <td>{{ $doctor->name }}</td>
                 <td>{{ $doctor->department->name }}</td>
                 <td>{{ $doctor->phone }}</td>

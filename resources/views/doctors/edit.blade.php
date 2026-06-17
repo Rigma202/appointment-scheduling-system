@@ -4,7 +4,6 @@
 
 <div class="container">
 
-```
 <div class="card">
     <div class="card-header">
         <h4>Edit Doctor</h4>
@@ -19,7 +18,7 @@
             @csrf
             @method('PUT')
 
-            <div class="mb-3">
+            <div class="mb-2">
                 <label>Name</label>
                 <input
                     id="name"
@@ -95,7 +94,7 @@
 
     </div>
 </div>
-```
+
 
 </div>
 @endsection
