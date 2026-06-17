@@ -24,19 +24,19 @@ export default function Modal({ open, title, onClose, children, size = 'lg' }) {
                 onClick={() => onClose?.()}
             >
                 <div
-                    className={`modal-dialog modal-${size}`}
+                    className={`modal-dialog modal-dialog-centered modal-${size}`}
                     onClick={(e) => e.stopPropagation()}
                 >
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">{title}</h5>
+                    <div className="modal-content app-modal border-0 shadow-lg">
+                        <div className="modal-header app-modal-header px-4 py-3">
+                            <h5 className="modal-title fw-semibold">{title}</h5>
                             <button
                                 type="button"
                                 className="btn-close"
                                 onClick={() => onClose?.()}
                             />
                         </div>
-                        <div className="modal-body">{children}</div>
+                        <div className="modal-body p-4">{children}</div>
                     </div>
                 </div>
             </div>

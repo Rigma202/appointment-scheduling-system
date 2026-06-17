@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import api, { parseError } from '../api';
-import DataTable from '../ui/DataTable';
+import CardGrid from '../ui/CardGrid';
+import Avatar from '../ui/Avatar';
 import Modal from '../ui/Modal';
 import PatientForm from './PatientForm';
 import { confirm, toast } from '../ui/notify';
@@ -12,6 +13,7 @@ export default function PatientsApp({
 }) {
     const [rows, setRows] = useState(initial);
     const [showCreate, setShowCreate] = useState(false);
+    const [editPatient, setEditPatient] = useState(null);
 
     const onDelete = async (row) => {
         const ok = await confirm({
@@ -30,38 +32,54 @@ export default function PatientsApp({
         }
     };
 
-    const columns = [
-        { key: 'name', label: 'Name' },
-        { key: 'phone', label: 'Phone' },
-        { key: 'email', label: 'Email' },
-        {
-            key: 'action',
-            label: 'Action',
-            sortable: false,
-            width: 150,
-            render: (r) => (
-                <>
-                    <a href={`${baseUrl}/${r.id}/edit`} className="btn btn-warning btn-sm me-1">
-                        Edit
-                    </a>
-                    <button className="btn btn-danger btn-sm" onClick={() => onDelete(r)}>
-                        Delete
-                    </button>
-                </>
-            ),
-        },
-    ];
+    const renderCard = (p) => (
+        <div className="card entity-card card-patient h-100 shadow-sm">
+            <div className="card-body">
+                <div className="d-flex align-items-center mb-3">
+                    <Avatar name={p.name} />
+                    <div className="ms-3 overflow-hidden">
+                        <h6 className="mb-0 text-truncate">{p.name}</h6>
+                        <small className="text-muted">Patient</small>
+                    </div>
+                </div>
+                <ul className="list-unstyled small text-muted mb-0">
+                    <li className="d-flex align-items-center mb-1">
+                        <span className="me-2">📞</span>
+                        <span className="text-truncate">{p.phone || '—'}</span>
+                    </li>
+                    <li className="d-flex align-items-center">
+                        <span className="me-2">✉️</span>
+                        <span className="text-truncate">{p.email || '—'}</span>
+                    </li>
+                </ul>
+            </div>
+            <div className="card-footer border-0 d-flex justify-content-end gap-2 pt-0">
+                <button className="btn btn-edit btn-sm" onClick={() => setEditPatient(p)}>
+                    Edit
+                </button>
+                <button className="btn btn-outline-danger btn-sm" onClick={() => onDelete(p)}>
+                    Delete
+                </button>
+            </div>
+        </div>
+    );
 
     return (
         <div className="container">
-            <h3>Patients</h3>
-            <div className="d-flex justify-content-end mb-3">
+            <div className="d-flex justify-content-between align-items-center mb-3">
+                <h3 className="mb-0">Patients</h3>
                 <button className="btn btn-primary" onClick={() => setShowCreate(true)}>
                     + Create Patient
                 </button>
             </div>
 
-            <DataTable columns={columns} rows={rows} emptyText="No patients found" />
+            <CardGrid
+                items={rows}
+                searchText={(p) => `${p.name} ${p.phone} ${p.email}`}
+                renderCard={renderCard}
+                pageSize={6}
+                emptyText="No patients found"
+            />
 
             <Modal open={showCreate} title="Create Patient" size="md" onClose={() => setShowCreate(false)}>
                 <PatientForm
@@ -72,6 +90,26 @@ export default function PatientsApp({
                         window.location.reload();
                     }}
                 />
+            </Modal>
+
+            <Modal
+                open={!!editPatient}
+                title="Edit Patient"
+                size="md"
+                onClose={() => setEditPatient(null)}
+            >
+                {editPatient && (
+                    <PatientForm
+                        mode="edit"
+                        action={`${baseUrl}/${editPatient.id}`}
+                        patient={editPatient}
+                        submitLabel="Update"
+                        onSuccess={() => {
+                            setEditPatient(null);
+                            window.location.reload();
+                        }}
+                    />
+                )}
             </Modal>
         </div>
     );

@@ -1,3 +1,263 @@
+/* ===== App modal (create / edit) ===== */
+.app-modal {
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.app-modal-header {
+    background: #f8f9fb;
+    border-bottom: 1px solid #eef0f4;
+}
+
+.app-modal .modal-title {
+    color: #1f2937;
+}
+
+.app-modal label {
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.35rem;
+}
+
+.app-modal .form-control,
+.app-modal .form-select {
+    padding: 0.55rem 0.75rem;
+}
+
+.app-modal form > .mb-2 {
+    margin-bottom: 1rem !important;
+}
+
+/* ===== Entity cards (doctor / patient) ===== */
+.entity-card {
+    border: none;
+    border-radius: 14px;
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.entity-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.12) !important;
+}
+
+.entity-card .card-footer {
+    background: transparent;
+}
+
+.card-doctor {
+    background: linear-gradient(180deg, #f5ece0 0%, #ffffff 55%);
+    border-top: 4px solid #b08968;
+}
+
+.card-patient {
+    background: linear-gradient(180deg, #e6f2fb 0%, #ffffff 55%);
+    border-top: 4px solid #3b82f6;
+}
+
+/* ===== Edit action button ===== */
+.btn-edit {
+    background: #6366f1;
+    border-color: #6366f1;
+    color: #fff;
+}
+
+.btn-edit:hover,
+.btn-edit:focus {
+    background: #4f46e5;
+    border-color: #4f46e5;
+    color: #fff;
+}
+
+/* ===== App layout: sidebar + topbar ===== */
+html {
+    font-size: 17.5px;
+}
+
+body {
+    background: #f4f6fb;
+}
+
+.app-shell {
+    min-height: 100vh;
+}
+
+.app-sidebar {
+    width: 300px;
+    flex-shrink: 0;
+    min-height: 100vh;
+    background: #111827;
+    color: #cbd5e1;
+    padding: 18px 14px;
+    position: sticky;
+    top: 0;
+}
+
+.app-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 10px 18px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.app-brand-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.app-brand-text {
+    font-weight: 700;
+    color: #fff;
+    font-size: 1.05rem;
+    line-height: 1.15;
+}
+
+.sidebar-label {
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: #64748b;
+    margin: 16px 12px 8px;
+    font-weight: 600;
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 12px;
+    margin-bottom: 4px;
+    border-radius: 10px;
+    color: #cbd5e1;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.sidebar-link svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    opacity: 0.85;
+}
+
+.sidebar-link:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+}
+
+.sidebar-link.active {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
+}
+
+.sidebar-link.active svg {
+    opacity: 1;
+}
+
+.app-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-topbar {
+    background: #fff;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 16px;
+    border-bottom: 1px solid #e5e7eb;
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    border: none;
+    color: #374151;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 999px;
+}
+
+.user-menu:hover {
+    background: #f3f4f6;
+}
+
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.sidebar-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: #374151;
+    padding: 4px;
+}
+
+.sidebar-backdrop {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .app-sidebar {
+        position: fixed;
+        z-index: 1040;
+        left: -320px;
+        height: 100vh;
+        transition: left 0.25s ease;
+    }
+    .app-sidebar.show {
+        left: 0;
+    }
+    .sidebar-toggle {
+        display: inline-flex;
+    }
+    .user-name {
+        display: none;
+    }
+    .sidebar-backdrop.show {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 1035;
+    }
+}
+
 #appointmentsTable thead {
     background: #ff9800;
     color: white;
