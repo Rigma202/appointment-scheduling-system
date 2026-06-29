@@ -55,11 +55,9 @@ export default function AppointmentsApp({
     };
 
     const resetFilters = () => {
-        setFilters(EMPTY_FILTERS);
+        setFilters({ ...EMPTY_FILTERS });
         setRows(initial);
     };
-
-    const hasActiveFilter = Object.values(filters).some((v) => v !== '' && v != null);
 
     const onDelete = async (row) => {
         const message =
@@ -132,11 +130,11 @@ export default function AppointmentsApp({
                 </button>
             </div>
 
-            <div className="card border-0 shadow-sm mb-3">
+            <div className="card border-0 shadow-sm mb-3 appt-filter">
                 <div className="card-body">
                     <div className="row g-3 align-items-end">
                         <div className="col-md-3">
-                            <label className="form-label small text-muted">Doctor</label>
+                            <label className="form-label small">Doctor</label>
                             <Select
                                 value={filters.doctor_id}
                                 onChange={(v) => setFilter('doctor_id', v)}
@@ -148,7 +146,7 @@ export default function AppointmentsApp({
                             />
                         </div>
                         <div className="col-md-3">
-                            <label className="form-label small text-muted">Department</label>
+                            <label className="form-label small">Department</label>
                             <Select
                                 value={filters.department_id}
                                 onChange={(v) => setFilter('department_id', v)}
@@ -157,7 +155,7 @@ export default function AppointmentsApp({
                             />
                         </div>
                         <div className="col-md-2">
-                            <label className="form-label small text-muted">Status</label>
+                            <label className="form-label small">Status</label>
                             <Select
                                 value={filters.status}
                                 onChange={(v) => setFilter('status', v)}
@@ -166,7 +164,7 @@ export default function AppointmentsApp({
                             />
                         </div>
                         <div className="col-md-2">
-                            <label className="form-label small text-muted">Date</label>
+                            <label className="form-label small">Date</label>
                             <input
                                 type="date"
                                 className="form-control"
@@ -179,9 +177,10 @@ export default function AppointmentsApp({
                                 {filtering ? '...' : 'Filter'}
                             </button>
                             <button
+                                type="button"
                                 className="btn btn-outline-secondary"
                                 onClick={resetFilters}
-                                disabled={!hasActiveFilter && rows === initial}
+                                disabled={filtering}
                             >
                                 Reset
                             </button>

@@ -112,6 +112,25 @@
     color: #08406f;
 }
 
+/* Appointment filter fields — match the Create Appointment form styling */
+.appt-filter .form-label {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #8b5e3c;
+}
+
+.appt-filter .form-control,
+.appt-filter .form-select {
+    border: 1px solid #e7c6aa;
+    background: #fffdfb;
+}
+
+.appt-filter .form-control:focus,
+.appt-filter .form-select:focus {
+    border-color: #d99a6c;
+    box-shadow: 0 0 0 0.2rem rgba(217, 154, 108, 0.15);
+}
+
 /* Bordered action buttons inside the appointments table and doctor cards */
 .appt-table .btn-view {
     border: 1px solid #5a9bd4;
